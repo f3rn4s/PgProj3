@@ -4,6 +4,23 @@
 #include "utils.h"
 #include "dice.h"
 
+#define CELL_SIZE (12)
+#define CELL_COLOR (c_white)
+#define CELLS_PER_LINE (3)
+#define CELLS_PER_COL (3)
+#define CELL_CIRCLE_COLOR (black)
+#define CELL_CROSS_COLOR (c_red)
+#define CELL_MARGIN (4)
+
+#define LINE_SIZE (2)
+
+#define BOARD_COLOR (c_black)
+
+#define CELL_STATE_NULL (-1)
+#define CELL_STATE_CIRCLE ('O')
+#define CELL_STATE_CROSS ('X')
+#define CELL_STATE_EMPTY ('?')
+
 
 /**
  * Cria e retorna um novo dado numa dado posição na janela gráfica, 
@@ -17,8 +34,16 @@
  * 		o dado criado
  */
 Dice dice_create(int x, int y, int side, int face) {
-	// a implementar 
-	Dice d = { .selected = false, .value =0 };
+
+	Dice d;
+	d.orig.x = x;
+	d.orig.y = y;
+	d.side = side;
+	if(face == 0)
+		d.value= random_number();
+	else
+		d.value = face;
+	
 	return d;
 }
 
@@ -31,8 +56,16 @@ Dice dice_create(int x, int y, int side, int face) {
  * Retorna:
  * 		nada
  **/
-void dice_draw(Dice d) {
-	 // a implementar
+void dice_draw(Dice d) { //Falta colocar valor nos dados
+	 {		
+		for(int i = 0; i < CELLS_PER_LINE; ++i)
+		{
+			for(int j = 0; j < CELLS_PER_LINE; ++j)
+			{				
+				graph_rect(d.orig.x,d.orig.y,d.side,d.side, CELL_COLOR, true);
+			}
+		}
+	}
 }
 
 /**
@@ -137,5 +170,33 @@ Dice dice_set_value(Dice d, int face) {
 	return d;
 }
 	
-	
+int random() //Funcao random universal para ser usado para qualquer situacao //https://www.tutorialspoint.com/c_standard_library/c_function_srand.html
+{
+	int random;
+	time_t t;
+
+	srand((unsigned) time(&t));
+
+	for(int i = 0; i < 5; i++) 
+        random = (int)(rand() % 2225);
+
+    return random;
+}
+int random_number() // função para retirar valores random com valores 1,2 e 3
+{
+	int a = 0;
+	a = random();
+	if (a > 750 && a < 1500)
+	{
+		return a = 2;
+	}
+	else if(a >= 1500 )
+	{
+		return a = 3;
+	}
+	else
+	{
+		return a = 1;
+	}
+}	
 	

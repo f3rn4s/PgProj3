@@ -117,6 +117,8 @@ int dice_value(Dice d);
  * 		O dado com o novo valor
  **/
 Dice dice_set_value(Dice d, int face); 
-	 
-	
 
+/*Retorna um valor entre 1 e 6*/
+int random();
+
+int random_number();
