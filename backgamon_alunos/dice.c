@@ -39,10 +39,7 @@ Dice dice_create(int x, int y, int side, int face) {
 	d.orig.x = x;
 	d.orig.y = y;
 	d.side = side;
-	if(face == 0)
-		d.value= random_number();
-	else
-		d.value = face;
+	d.value= dice_set_value();
 	
 	return d;
 }
@@ -166,7 +163,9 @@ bool dice_is_enabled(Dice d) {
  * 		O dado com o novo valor
  **/
 Dice dice_set_value(Dice d, int face) {
-	// a impelmentar
+	if(face == 0)
+		int a =random_number();
+	d.value = a;
 	return d;
 }
 	
@@ -178,7 +177,7 @@ int random() //Funcao random universal para ser usado para qualquer situacao //h
 	srand((unsigned) time(&t));
 
 	for(int i = 0; i < 5; i++) 
-        random = (int)(rand() % 2225);
+        random = (int)(rand() % 7000);
 
     return random;
 }
