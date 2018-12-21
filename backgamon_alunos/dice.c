@@ -1,20 +1,21 @@
 #include <pg/graphics.h>
+#include <time.h>
 
 #include "components.h"
 #include "utils.h"
 #include "dice.h"
 
-#define CELL_SIZE (12)
+#define CELL_SIZE (40)
 #define CELL_COLOR (c_white)
 #define CELLS_PER_LINE (3)
 #define CELLS_PER_COL (3)
-#define CELL_CIRCLE_COLOR (black)
-#define CELL_CROSS_COLOR (c_red)
-#define CELL_MARGIN (4)
+#define CELL_CIRCLE_COLOR (c_black)
+#define CELL_MARGIN (2)
 
-#define LINE_SIZE (2)
+#define LINE_SIZE (1)
 
-#define BOARD_COLOR (c_black)
+#define BOARD_COLOR (c_white)
+#define BOARD_COLOR_MARGIN (c_black)
 
 #define CELL_STATE_NULL (-1)
 #define CELL_STATE_CIRCLE ('O')
@@ -39,7 +40,7 @@ Dice dice_create(int x, int y, int side, int face) {
 	d.orig.x = x;
 	d.orig.y = y;
 	d.side = side;
-	d.value= dice_set_value();
+	dice_set_value(d,face);
 	
 	return d;
 }
@@ -53,14 +54,41 @@ Dice dice_create(int x, int y, int side, int face) {
  * Retorna:
  * 		nada
  **/
-void dice_draw(Dice d) { //Falta colocar valor nos dados
+/*void dice_draw(Dice d) { //Falta colocar valor nos dados
+	 int k = 0;
 	 {		
 		for(int i = 0; i < CELLS_PER_LINE; ++i)
 		{
-			for(int j = 0; j < CELLS_PER_LINE; ++j)
-			{				
+			for(int j = 0; j < CELLS_PER_LINE; ++j,k=+10)
+			{	
+
 				graph_rect(d.orig.x,d.orig.y,d.side,d.side, CELL_COLOR, true);
+				graph_circle(d.orig.x + k + d.side/5, d.orig.y + k + d.side/5, d.side/5 - CELL_MARGIN, CELL_CIRCLE_COLOR, true);
+
 			}
+			//graph_circle(d.orig.x + (i+5) + d.side/5, d.orig.y+ (i+5) + d.side/5, d.side/5 - CELL_MARGIN, CELL_CIRCLE_COLOR, true);
+
+		}
+		//graph_circle(d.orig.x  + d.side/5, d.orig.y+ d.side/5, d.side/5 - CELL_MARGIN, CELL_CIRCLE_COLOR, true);
+		//graph_circle(d.orig.x  + d.side/5 + 20, d.orig.y+ d.side/5 + 20, d.side/5 - CELL_MARGIN, CELL_CIRCLE_COLOR, true);
+	}
+}*/
+
+void dice_draw(Dice d){
+
+	graph_rect(d.orig.x,d.orig.y, d.side,  d.side , BOARD_COLOR_MARGIN, true);
+	graph_rect(d.orig.x+1,d.orig.y+1, d.side -2, d.side-2 , BOARD_COLOR, true);
+	
+	for(int i = 0; i < CELLS_PER_LINE; ++i)
+	{
+		for(int j = 0; j < CELLS_PER_LINE; ++j)
+		{
+			int x = (((d.side-4)/12) - LINE_SIZE) * j;//o porque do 12 e para dar 3x3 celulas
+			int y = (((d.side-4)/12) - LINE_SIZE) * i;
+			
+			graph_rect(d.orig.x + x + 1, d.orig.y + y +1,((d.side-4)/3) - LINE_SIZE,((d.side-4)/3) - LINE_SIZE, CELL_COLOR, true);
+			graph_circle(d.orig.x + x + ((d.side-4)/3)/2 + 1, d.orig.y + y + ((d.side-4)/3)/2, ((d.side-4)/3)/2 - CELL_MARGIN, CELL_CIRCLE_COLOR, true);
+			//graph_circle(d.orig.x + x , d.orig.y + y , d.side/5 - CELL_MARGIN, CELL_CIRCLE_COLOR, true);
 		}
 	}
 }
@@ -74,7 +102,8 @@ void dice_draw(Dice d) { //Falta colocar valor nos dados
  * 		true se o ponto está contido no dado, false caso contrário
  **/
 bool dice_contains(Dice d, int x, int y) {
-	// a implementar
+	// a implementar para verificar se os pontos ja estao preenchidos no draw
+
 	return false;
 }
 
@@ -163,8 +192,9 @@ bool dice_is_enabled(Dice d) {
  * 		O dado com o novo valor
  **/
 Dice dice_set_value(Dice d, int face) {
+	int a;
 	if(face == 0)
-		int a =random_number();
+		a = random_number();
 	d.value = a;
 	return d;
 }
@@ -176,8 +206,8 @@ int random() //Funcao random universal para ser usado para qualquer situacao //h
 
 	srand((unsigned) time(&t));
 
-	for(int i = 0; i < 5; i++) 
-        random = (int)(rand() % 7000);
+	for(int i = 0; i < 100; i++) 
+        random = (int)(rand() % 6000);
 
     return random;
 }
@@ -185,17 +215,29 @@ int random_number() // função para retirar valores random com valores 1,2 e 3
 {
 	int a = 0;
 	a = random();
-	if (a > 750 && a < 1500)
+	if (a >= 0 && a < 1000)
 	{
 		return a = 2;
 	}
-	else if(a >= 1500 )
+	else if (a >= 1000 && a<2000)
+	{
+		return a = 5;
+	}
+	else if (a >= 2000 && a<3000)
+	{
+		return a = 1;
+	}
+	else if (a >= 3000 && a<4000)
+	{
+		return a = 4;
+	}
+	else if(a >= 4000 && a<5000)
 	{
 		return a = 3;
 	}
 	else
 	{
-		return a = 1;
+		return a = 6;
 	}
 }	
 	
